@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE = "YOUR_DOCKERHUB_USERNAME/shanif-profile"
+        IMAGE = "shanif2002/shanif-profile"
         TAG   = "${env.BUILD_NUMBER}"
     }
 
@@ -15,12 +15,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                bat '''
-                    python -m venv venv
-                    venv\\Scripts\\python -m pip install --no-cache-dir Flask gunicorn pytest flake8
-                    venv\\Scripts\\python -m flake8 app.py --max-line-length=120
-                    venv\\Scripts\\python -m pytest -q
-                '''
+                bat 'docker run --rm -v "%WORKSPACE%:/app" -w /app python:3.12-slim sh -c "pip install --no-cache-dir Flask gunicorn pytest flake8 && python -m flake8 app.py --max-line-length=120 && python -m pytest -q"'
             }
         }
 
