@@ -24,10 +24,12 @@ pipeline {
         }
 
         stage('Trivy scan') {
-            steps {
-                bat 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image --severity CRITICAL --exit-code 1 --ignore-unfixed %IMAGE%:%TAG%'
-            }
+    steps {
+        retry(2) {
+            bat 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v trivy-cache:/root/.cache aquasec/trivy:latest image --severity CRITICAL --exit-code 1 --ignore-unfixed %IMAGE%:%TAG%'
         }
+    }
+}
 
         stage('Push to Docker Hub') {
             when { branch 'main' }
