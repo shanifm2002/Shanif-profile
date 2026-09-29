@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ p.name }} — {{ p.title }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="layout">
+    <aside class="side">
+      <div class="photo">
+        <span class="initials" aria-hidden="true">{{ p.name.split()[0][0] }}{{ p.name.split()[-1][0] }}</span>
+        <img src="{{ url_for('static', filename=p.photo) }}" alt="Photo of {{ p.name }}" onerror="this.remove()">
+      </div>
+      <h1>{{ p.name }}</h1>
+      <p class="role">{{ p.title }}</p>
+      <ul class="contact">
+        <li>{{ p.location }}</li>
+        <li><a href="mailto:{{ p.email }}">{{ p.email }}</a></li>
+        <li><a href="tel:{{ p.phone|replace(' ', '') }}">{{ p.phone }}</a></li>
+        <li><a href="{{ p.linkedin }}">LinkedIn</a></li>
+        <li><a href="{{ p.github }}">GitHub</a></li>
+      </ul>
+    </aside>
+
+    <main>
+      <section>
+        <h2>About</h2>
+        <p class="lead">{{ p.summary }}</p>
+      </section>
+
+      <section>
+        <h2>Projects</h2>
+        {% for pr in p.projects %}
+        <article>
+          <h3>{{ pr.name }}</h3>
+          <p class="stack">{{ pr.stack }}</p>
+          <ul>{% for pt in pr.points %}<li>{{ pt }}</li>{% endfor %}</ul>
+        </article>
+        {% endfor %}
+      </section>
+
+      <section>
+        <h2>Experience</h2>
+        {% for e in p.experience %}
+        <article>
+          <h3>{{ e.role }}, {{ e.company }}</h3>
+          <p class="stack">{{ e.period }}</p>
+          <ul>{% for pt in e.points %}<li>{{ pt }}</li>{% endfor %}</ul>
+        </article>
+        {% endfor %}
+      </section>
+
+      <section>
+        <h2>Skills</h2>
+        <dl class="skills">
+          {% for group, items in p.skills.items() %}
+          <dt>{{ group }}</dt>
+          <dd>{{ items }}</dd>
+          {% endfor %}
+        </dl>
+      </section>
+
+      <section>
+        <h2>Certification</h2>
+        {% for c in p.certifications %}
+        <article>
+          <h3>{{ c.name }}</h3>
+          <p class="stack">{{ c.period }}</p>
+          <p>{{ c.detail }}</p>
+        </article>
+        {% endfor %}
+      </section>
+
+      <section>
+        <h2>Education</h2>
+        {% for ed in p.education %}
+        <article>
+          <h3>{{ ed.degree }}</h3>
+          <p class="stack">{{ ed.period }}</p>
+          <p>{{ ed.school }}</p>
+        </article>
+        {% endfor %}
+      </section>
+    </main>
+  </div>
+</body>
+</html>
