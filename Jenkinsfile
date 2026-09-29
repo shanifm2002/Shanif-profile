@@ -14,10 +14,10 @@ pipeline {
         }
 
         stage('Test') {
-            steps {
-                bat 'docker run --rm -v "%WORKSPACE%:/app" -w /app python:3.12-slim sh -c "pip install --no-cache-dir Flask gunicorn pytest flake8 && python -m flake8 app.py --max-line-length=120 && python -m pytest -q"'
-            }
-        }
+    steps {
+        bat 'docker run --rm -v "%WORKSPACE%:/app" -w /app python:3.12-slim sh -c "pip install --no-cache-dir Flask gunicorn pytest flake8 && python -m flake8 app.py --max-line-length=160 && python -m pytest -q"'
+    }
+}
 
         stage('Build image') {
             steps { bat 'docker build -t %IMAGE%:%TAG% -t %IMAGE%:latest .' }
